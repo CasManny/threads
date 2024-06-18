@@ -19,8 +19,8 @@ import { ObjectId } from "mongodb";
 import { Textarea } from "../ui/textarea";
 import { usePathname, useRouter } from "next/navigation";
 import { threadValidation } from "@/lib/validations/thread";
-import { createThread } from "@/lib/actions/thread.actios";
-
+import { createThread } from "@/lib/actions/thread.actions";
+@/lib/actions/thread.actions
 const PostThread = (userId: string) => {
   const pathname = usePathname();
   const router = useRouter();
@@ -34,7 +34,7 @@ const PostThread = (userId: string) => {
   });
 
     const onSubmit = async () => {
-        await createThread()
+        await createThread({})
   };
 
   return (
