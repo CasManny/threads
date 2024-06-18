@@ -11,8 +11,10 @@ const Bottombar = () => {
   return (
     <section className="bottombar">
       <div className="bottonbar_container flex items-center justify-between">
-        {sidebarLinks.map((link) => {
-          const isActive = (pathname.includes(link.route) && link.route.length > 1) || pathname === link.route;
+        {sidebarLinks.map((link, index) => {
+          const isActive =
+            (pathname.includes(link.route) && link.route.length > 1) ||
+            pathname === link.route;
           return (
             <>
               <Link
@@ -26,7 +28,9 @@ const Bottombar = () => {
                   width={24}
                   height={24}
                 />
-                <p className="text-subtle-medium  text-light-1 max-sm:hidden">{link.label.split(" ")[0]}</p>
+                <p className="text-subtle-medium  text-light-1 max-sm:hidden">
+                  {link.label.split(" ")[0]}
+                </p>
               </Link>
             </>
           );
