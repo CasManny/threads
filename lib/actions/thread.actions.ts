@@ -90,6 +90,8 @@ export const fetchThreadById = async (threadId: string) => {
           },
         ],
       });
+    
+    return thread
   } catch (error: any) {
     handleError(error.message);
   }

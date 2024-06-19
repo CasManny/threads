@@ -41,3 +41,9 @@ export interface IThreadCardParams {
   }[];
   isComment?: boolean;
 }
+
+export interface ICommentParams {
+  threadId: string;
+  currentUserImg: string;
+  currentUserId: string;
+}
