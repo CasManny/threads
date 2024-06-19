@@ -47,3 +47,10 @@ export interface ICommentParams {
   currentUserImg: string;
   currentUserId: string;
 }
+
+export interface ICommentAddToThreadParams {
+  threadId: string,
+  commentText: string,
+  userId: string,
+  path: string
+}

@@ -1,6 +1,6 @@
 "use server";
 
-import { ICreateThreadParams } from "@/types";
+import { ICommentAddToThreadParams, ICreateThreadParams } from "@/types";
 import { handleError } from "../utils";
 import { connectToDatabase } from "../database";
 import { revalidatePath } from "next/cache";
@@ -96,3 +96,30 @@ export const fetchThreadById = async (threadId: string) => {
     handleError(error.message);
   }
 };
+
+export const addCommentToThread = async ({threadId, commentText, userId, path}:ICommentAddToThreadParams) => {
+  try {
+    await connectToDatabase()
+    // Find the original thread by its Id
+    const originalThread = await Thread.findById(threadId)
+    if (!originalThread) {
+      throw new Error("Thread not")
+    }
+    // Create a new thread with the comment text
+    const commentThread = new Thread({
+      text: commentText,
+      author: userId,
+      parentId: threadId
+    })
+    // save the new comment thread to database
+    const savedCommentThread = await commentThread.save()
+    // update the orginal thread to include the new comment
+    originalThread.children.push(savedCommentThread._id)
+    // save the orginal thread
+    await originalThread.save();
+    revalidatePath(path)
+  } catch (error: any) {
+    handleError(error.message)
+  }
+
+}
