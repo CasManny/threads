@@ -20,9 +20,9 @@ import { Textarea } from "../ui/textarea";
 import { usePathname, useRouter } from "next/navigation";
 import { threadValidation } from "@/lib/validations/thread";
 import { createThread } from "@/lib/actions/thread.actions";
-@/lib/actions/thread.actions
-const PostThread = (userId: string) => {
-  const pathname = usePathname();
+const PostThread = ({userId}: { userId: string}) => {
+    const pathname = usePathname();
+    console.log(pathname)
   const router = useRouter();
 
   const form = useForm<z.infer<typeof threadValidation>>({
@@ -33,8 +33,15 @@ const PostThread = (userId: string) => {
     },
   });
 
-    const onSubmit = async () => {
-        await createThread({})
+    const onSubmit = async (values: z.infer<typeof threadValidation>) => {
+        await createThread({
+            text: values.thread,
+            author: userId,
+            communityId: null,
+            path: pathname
+        })
+
+        router.push("/")
   };
 
   return (

@@ -8,7 +8,6 @@ const CreateThreadPage = async () => {
   if (!user) return null;
 
   const userInfo = await fetchUser(user.id)
-
   if (!userInfo?.onboarded) {
     redirect('/onboarding')
   }
@@ -16,7 +15,7 @@ const CreateThreadPage = async () => {
   return (
     <>
     <h1 className='head-text'>Create Thread</h1>
-    <PostThread userId={userInfo._id} />
+    <PostThread userId={userInfo?._id.toString()} />
     </>
   )
 }

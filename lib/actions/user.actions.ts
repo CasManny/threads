@@ -2,9 +2,9 @@
 
 import { IUpdateUserParams } from "@/types";
 import { connectToDatabase } from "../database";
-import { User } from "../database/models/user.model";
 import { handleError } from "../utils";
 import { revalidatePath } from "next/cache";
+import User from "../database/models/user.model";
 
 export const updateUser = async ({
   bio,
