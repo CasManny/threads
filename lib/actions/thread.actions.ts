@@ -6,6 +6,7 @@ import { connectToDatabase } from "../database";
 import { revalidatePath } from "next/cache";
 import User from "../database/models/user.model";
 import Thread from "../database/models/thread.model";
+import exp from "constants";
 
 export const createThread = async ({
   text,
@@ -38,25 +39,57 @@ export const fetchThreads = async (pageNumber = 1, pageSize = 20) => {
   try {
     await connectToDatabase();
     const skipAmount = Number(pageNumber - 1) * pageSize;
-    const threadsQuery = Thread.find({ parentId: { $in: [null, undefined] } })
+
+    const threads = await Thread.find({ parentId: { $in: [null, undefined] } })
       .sort({ createdAt: "desc" })
       .skip(skipAmount)
       .limit(pageSize)
-      .populate({ path: "author", model: User })
+      .populate({ path: "author" })
       .populate({
         path: "children",
-        populate: {
-          path: "author",
-          model: User,
-          select: "_id name parentId image",
-        },
+        populate: { path: "author", select: "_id name parentId image" },
       });
 
-      const totalThreadCount = await Thread.countDocuments({ parentId: { $in: [null, undefined] } })
-      const threads = await threadsQuery.exec()
+    const totalThreadCount = await Thread.countDocuments({
+      parentId: { $in: [null, undefined] },
+    });
+    const isNext = totalThreadCount > skipAmount + threads.length;
 
-      const isNext = totalThreadCount > (skipAmount + threads.length)
-      return { threads, isNext}
+    return { threads, isNext };
+  } catch (error: any) {
+    handleError(error.message);
+  }
+};
+
+export const fetchThreadById = async (threadId: string) => {
+  try {
+    await connectToDatabase();
+    // TODO: Populate community
+    const thread = await Thread.findById(threadId)
+      .populate({
+        path: "author",
+        model: User,
+        select: "_id id name image",
+      })
+      .populate({
+        path: "children",
+        populate: [
+          {
+            path: "author",
+            model: User,
+            select: "name _id id parentId image",
+          },
+          {
+            path: "children",
+            model: Thread,
+            populate: {
+              path: "author",
+              model: User,
+              select: "_id id name parentId image"
+            }
+          },
+        ],
+      });
   } catch (error: any) {
     handleError(error.message);
   }
