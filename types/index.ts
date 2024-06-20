@@ -41,6 +41,7 @@ export interface IThreadCardParams {
     onboarded: boolean;
     threads: string[];
     username: string;
+    name: string;
   };
   community: { id: string; name: string; image: string } | null;
   createdAt: string;
@@ -72,4 +73,10 @@ export interface IProfileParams {
   username: string;
   avatar: string;
   bio: string;
+}
+
+export interface IThreadsTabParams {
+  currentUserId: string;
+  accountId: string,
+  accountType: string;
 }

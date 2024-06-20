@@ -2,12 +2,14 @@
 
 import { sidebarLinks } from '@/constants'
 import { SignOutButton, SignedIn, SignedOut } from '@clerk/nextjs'
+import { currentUser } from '@clerk/nextjs/server'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-const LeftSidebar = () => {
+const LeftSidebar = async () => {
   const pathname = usePathname()
   const router = useRouter()
+  const user = await currentUser()
   return (
     <section className="custom-scrollbar leftsidebar">
       <div className="flex w-full flex-1 flex-col gap-6 px-6">
@@ -15,6 +17,10 @@ const LeftSidebar = () => {
           const isActive =
             (pathname.includes(link.route) && link.route.length > 1) ||
             pathname === link.route;
+          
+          if (link.route === '/profile') {
+            link.route = `${link.route}/${user?.id!}`
+          }
           return (
             <Link
               href={link.route}
