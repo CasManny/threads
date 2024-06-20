@@ -31,7 +31,17 @@ export interface IThreadCardParams {
   currentUserId: string;
   parentId: string | null;
   content: string;
-  author: { name: string; image: string; id: string };
+  author: {
+    _id: string;
+    id: string;
+    __v: number;
+    bio: string;
+    communities: string[];
+    image: string;
+    onboarded: boolean;
+    threads: string[];
+    username: string;
+  };
   community: { id: string; name: string; image: string } | null;
   createdAt: string;
   comments: {
@@ -49,8 +59,17 @@ export interface ICommentParams {
 }
 
 export interface ICommentAddToThreadParams {
-  threadId: string,
-  commentText: string,
-  userId: string,
-  path: string
+  threadId: string;
+  commentText: string;
+  userId: string;
+  path: string;
+}
+
+export interface IProfileParams {
+  accountId: string;
+  authUser: string;
+  name: string;
+  username: string;
+  avatar: string;
+  bio: string;
 }

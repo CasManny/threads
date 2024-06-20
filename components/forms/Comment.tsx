@@ -17,6 +17,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import { addCommentToThread } from "@/lib/actions/thread.actions";
 
 const Comment = ({
   threadId,
@@ -32,8 +33,18 @@ const Comment = ({
       thread: "",
     },
   });
+    
 
-  const onSubmit = async (values: z.infer<typeof commentValidation>) => {};
+  const onSubmit = async (values: z.infer<typeof commentValidation>) => {
+    await addCommentToThread({
+      threadId: threadId,
+      commentText: values.thread,
+      userId: JSON.parse(currentUserId),
+      path: pathname
+    });
+
+    form.reset();
+  };
   return (
     <Form {...form}>
       <form className="comment-form" onSubmit={form.handleSubmit(onSubmit)}>

@@ -12,12 +12,13 @@ export const updateUser = async ({
   username,
   userId,
   image,
+  name,
 }: IUpdateUserParams) => {
   try {
     await connectToDatabase();
     const user = await User.findOneAndUpdate(
       { id: userId },
-      { username: username.toLowerCase(), bio, path, image, onboarded: true },
+      { username: username.toLowerCase(), bio, path, image, onboarded: true, name },
       { upsert: true }
     );
 
