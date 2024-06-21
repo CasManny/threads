@@ -1,3 +1,5 @@
+import { SortOrder } from "mongoose";
+
 export interface IAccountProps {
   user: {
     id?: string;
@@ -77,6 +79,22 @@ export interface IProfileParams {
 
 export interface IThreadsTabParams {
   currentUserId: string;
-  accountId: string,
+  accountId: string;
   accountType: string;
+}
+
+export interface IUserSearchParams {
+  userId: string;
+  searchString?: string;
+  pageNumber?: number;
+  pageSize?: number;
+  sortBy: SortOrder;
+}
+
+export interface IUserSearchResultParams {
+  id: string;
+  name: string;
+  username: string;
+  imgUrl: string;
+  personType: string;
 }

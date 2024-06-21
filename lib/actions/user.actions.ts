@@ -1,11 +1,13 @@
 "use server";
 
-import { IUpdateUserParams } from "@/types";
+import { IUpdateUserParams, IUserSearchParams } from "@/types";
 import { connectToDatabase } from "../database";
 import { handleError } from "../utils";
 import { revalidatePath } from "next/cache";
 import User from "../database/models/user.model";
 import Thread from "../database/models/thread.model";
+import { queryObjects } from "v8";
+import { FilterQuery } from "mongoose";
 
 export const updateUser = async ({
   bio,
@@ -72,3 +74,47 @@ export const fetchUserThreads = async (userId: string) => {
     handleError(error.message);
   }
 };
+
+
+export const fetchUsers = async ({userId, searchString ="", pageSize=20, pageNumber=0, sortBy}: IUserSearchParams) => {
+  try {
+    await connectToDatabase()
+    const skipAmount = Number(pageNumber - 1) * pageSize
+    const regex = new RegExp(searchString, "i")
+
+    const query: FilterQuery<typeof User> = { id: { $ne: userId } }
+    if (searchString.trim() !== "") {
+      query.$or = [{username: {$regex: regex}}, {name: {$regex: regex}}]
+    }
+    const sortOptions = { createdAt: sortBy }
+    
+    const usersQuery = User.find(query).sort(sortOptions).skip(skipAmount).limit(pageSize)
+    const totalUserCount = await User.countDocuments(query)
+
+    const users = await usersQuery.exec()
+    const isNext = totalUserCount > (skipAmount + users.length)
+    return {users, isNext}
+  } catch (error: any) {
+    handleError(error.message)
+  }
+}
+
+export const getActivity = async (userId: string) => {
+  try {
+    await connectToDatabase()
+    const userThreads = await Thread.find({ author: userId });
+    // collect all the thread ids (replies) from the children field
+    const childThreadIds = userThreads.reduce((acc, userThread) => {
+      return acc.concat(userThread.children)
+    }, [])
+    const replies = await Thread.find({ _id: { $in: childThreadIds }, author: { $ne: userId } }).populate({
+      path: "author",
+      model: User,
+      select: "name image _id"
+    })
+
+    return replies
+  } catch (error: any) {
+    handleError(error.message)
+  }
+} 
