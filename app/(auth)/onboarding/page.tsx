@@ -1,4 +1,5 @@
 import AccountProfile from "@/components/forms/AccountProfile";
+import { fetchUser } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
@@ -7,7 +8,11 @@ export default async function Page() {
   if (!user) {
     redirect('/sign-in')
   }
-    const userInfo = {}
+  const userAlreadyInDatabase = await fetchUser(user?.id!)
+  if (userAlreadyInDatabase) {
+    redirect("/")
+  }
+    const userInfo = await fetchUser(user?.id!)
     const userData = {
         id: user?.id,
         objectId: userInfo?._id || "",
