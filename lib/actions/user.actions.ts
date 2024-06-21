@@ -57,13 +57,10 @@ export const fetchUserThreads = async (userId: string) => {
     // TODO: populate the community path as well
     const threads = await User.findOne({ id: userId }).populate({
       path: "threads",
-      model: Thread,
       populate: {
         path: "children",
-        model: Thread,
         populate: {
           path: "author",
-          model: User,
           select: "name image id",
         },
       },
@@ -109,7 +106,6 @@ export const getActivity = async (userId: string) => {
     }, [])
     const replies = await Thread.find({ _id: { $in: childThreadIds }, author: { $ne: userId } }).populate({
       path: "author",
-      model: User,
       select: "name image _id"
     })
 

@@ -55,7 +55,6 @@ export async function fetchCommunityDetails(id: string) {
       "createdBy",
       {
         path: "members",
-        model: User,
         select: "name username image _id id",
       },
     ]);
@@ -72,19 +71,15 @@ export async function fetchCommunityPosts(id: string) {
     await connectToDatabase()
     const communityPosts = await Community.findById(id).populate({
       path: "threads",
-      model: Thread,
       populate: [
         {
           path: "author",
-          model: User,
           select: "name image id", // Select the "name" and "_id" fields from the "User" model
         },
         {
           path: "children",
-          model: Thread,
           populate: {
             path: "author",
-            model: User,
             select: "image _id", // Select the "name" and "_id" fields from the "User" model
           },
         },
