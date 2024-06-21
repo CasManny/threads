@@ -7,7 +7,7 @@ const communitySchema = new mongoose.Schema({
     bio: { type: String },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     threads: [{ type: mongoose.Schema.Types.ObjectId, ref: "Thread" }],
-    members: [{typpe: mongoose.Schema.Types.ObjectId, ref: "User"}]
+    members: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}]
 })
 
 export const Community = mongoose.models.Community || mongoose.model("Community", communitySchema)

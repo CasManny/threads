@@ -14,8 +14,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  image: String,
-  bio: String,
+  image: {
+    type: String,
+  },
+  bio: {
+    type: String,
+  },
   threads: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -34,6 +38,4 @@ const userSchema = new mongoose.Schema({
   ],
 });
 
-const User =mongoose.models.User ||  mongoose.model("User", userSchema);
-
-export default User;
+export const User = mongoose.model("User", userSchema);

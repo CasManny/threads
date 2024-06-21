@@ -4,10 +4,10 @@ import { IUpdateUserParams, IUserSearchParams } from "@/types";
 import { connectToDatabase } from "../database";
 import { handleError } from "../utils";
 import { revalidatePath } from "next/cache";
-import User from "../database/models/user.model";
 import Thread from "../database/models/thread.model";
 import { queryObjects } from "v8";
 import { FilterQuery } from "mongoose";
+import { User } from "../database/models/user.model";
 
 export const updateUser = async ({
   bio,

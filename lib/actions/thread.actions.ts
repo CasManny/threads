@@ -4,9 +4,9 @@ import { ICommentAddToThreadParams, ICreateThreadParams } from "@/types";
 import { handleError } from "../utils";
 import { connectToDatabase } from "../database";
 import { revalidatePath } from "next/cache";
-import User from "../database/models/user.model";
 import Thread from "../database/models/thread.model";
 import exp from "constants";
+import { User } from "../database/models/user.model";
 
 export const createThread = async ({
   text,
